@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const connectDB = require('./config/db');
@@ -14,15 +15,26 @@ const app = express();
 // middleware
 app.use(cors());
 app.use(express.json());
+// 🔥 Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // db
 connectDB();
 
 // routes
+// Routes
+app.use('/api', require('./routes/upload.routes'));
 app.use('/api/officers', officersRoutes);
 app.use('/api/schemes', schemesRoutes); // ✅ ADD THIS
 app.use('/api/reports', reportRoutes);
 app.use('/api/about', aboutRoutes);
+app.use('/api/home-notices', require('./routes/homeNotices.routes'));
+app.use('/api/home-announcements', require('./routes/homeAnnouncements.routes'));
+app.use('/api/home-intro', require('./routes/homeIntro.routes'));
+app.use('/api/home-map', require('./routes/homeMap.routes'));
+app.use('/api/gallery', require('./routes/gallery.routes'));
+
+
 
 
 // test route
