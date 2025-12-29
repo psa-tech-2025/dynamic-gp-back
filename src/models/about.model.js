@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const AboutSchema = new mongoose.Schema(
   {
+        projectId: {
+    type: String,
+    required: true,
+    index: true
+  },
     intro: String,
     historyDesc: String,
     objectivesList: [String],

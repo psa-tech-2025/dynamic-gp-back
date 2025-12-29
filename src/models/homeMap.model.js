@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const HomeMapSchema = new mongoose.Schema(
   {
+        projectId: {
+    type: String,
+    required: true,
+    index: true
+  },
     title: String,
     address: String,
     mapEmbedUrl: String,

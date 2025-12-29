@@ -1,11 +1,17 @@
 const mongoose = require('mongoose');
 
 const HomeNoticeSchema = new mongoose.Schema(
-  { text: { type: String, required: true } },
+
+  {  projectId: {
+    type: String,
+    required: true,
+    index: true
+  },text: { type: String, required: true } },
   { timestamps: true }
 );
 
 HomeNoticeSchema.set('toJSON', {
+
   virtuals: true,
   transform: (_, ret) => {
     ret.id = ret._id;

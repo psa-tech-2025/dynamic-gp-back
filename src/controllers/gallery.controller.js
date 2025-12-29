@@ -1,23 +1,35 @@
 const Gallery = require('../models/gallery.model');
 
 exports.getAll = async (req, res) => {
-  const data = await Gallery.find().sort({ createdAt: -1 });
+  const data = await Gallery.find({
+    projectId: req.projectId
+  }).sort({ createdAt: -1 });
+
   res.json(data);
 };
 
 exports.create = async (req, res) => {
-  const count = await Gallery.countDocuments();
+  const count = await Gallery.countDocuments({
+    projectId: req.projectId
+  });
+
   if (count >= 10) {
-    return res.status(400).json({ message: 'Max 10 images allowed' });
+    return res.status(400).json({
+      message: 'Max 10 images allowed per project'
+    });
   }
 
-  const item = await Gallery.create(req.body);
+  const item = await Gallery.create({
+    ...req.body,
+    projectId: req.projectId
+  });
+
   res.status(201).json(item);
 };
 
 exports.update = async (req, res) => {
-  const updated = await Gallery.findByIdAndUpdate(
-    req.params.id,
+  const updated = await Gallery.findOneAndUpdate(
+    { _id: req.params.id, projectId: req.projectId },
     req.body,
     { new: true }
   );
@@ -25,6 +37,9 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-  await Gallery.findByIdAndDelete(req.params.id);
+  await Gallery.findOneAndDelete({
+    _id: req.params.id,
+    projectId: req.projectId
+  });
   res.json({ success: true });
 };

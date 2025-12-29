@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const HomeIntroSchema = new mongoose.Schema(
   {
+        projectId: {
+    type: String,
+    required: true,
+    index: true
+  },
     nameText: String,
     postText: String,
     introText: String,

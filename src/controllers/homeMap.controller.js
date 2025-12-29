@@ -1,17 +1,32 @@
 const HomeMap = require('../models/homeMap.model');
 
-exports.getAll = async (_, res) => res.json(await HomeMap.find());
-exports.create = async (req, res) => res.status(201).json(await HomeMap.create(req.body));
-exports.update = async (req, res) =>
-  res.json(await HomeMap.findByIdAndUpdate(req.params.id, req.body, { new: true }));
+exports.getAll = async (req, res) => {
+  res.json(await HomeMap.find({ projectId: req.projectId }));
+};
+
+exports.create = async (req, res) => {
+  res.status(201).json(
+    await HomeMap.create({
+      ...req.body,
+      projectId: req.projectId
+    })
+  );
+};
+
+exports.update = async (req, res) => {
+  res.json(
+    await HomeMap.findOneAndUpdate(
+      { _id: req.params.id, projectId: req.projectId },
+      req.body,
+      { new: true }
+    )
+  );
+};
+
 exports.remove = async (req, res) => {
-  const { id } = req.params;
-  console.log('DELETE MAP:', id);
-
-  if (!id) {
-    return res.status(400).json({ message: 'ID missing' });
-  }
-
-  await HomeMap.findByIdAndDelete(id);
+  await HomeMap.findOneAndDelete({
+    _id: req.params.id,
+    projectId: req.projectId
+  });
   res.json({ success: true });
 };

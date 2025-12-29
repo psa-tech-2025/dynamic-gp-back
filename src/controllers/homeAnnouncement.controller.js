@@ -1,10 +1,29 @@
 const Model = require('../models/homeAnnouncement.model');
 
-exports.getAll = async (_, res) => res.json(await Model.find());
-exports.create = async (req, res) => res.status(201).json(await Model.create(req.body));
+exports.getAll = async (req, res) =>
+  res.json(await Model.find({ projectId: req.projectId }));
+
+exports.create = async (req, res) =>
+  res.status(201).json(
+    await Model.create({
+      ...req.body,
+      projectId: req.projectId
+    })
+  );
+
 exports.update = async (req, res) =>
-  res.json(await Model.findByIdAndUpdate(req.params.id, req.body, { new: true }));
+  res.json(
+    await Model.findOneAndUpdate(
+      { _id: req.params.id, projectId: req.projectId },
+      req.body,
+      { new: true }
+    )
+  );
+
 exports.remove = async (req, res) => {
-  await Model.findByIdAndDelete(req.params.id);
+  await Model.findOneAndDelete({
+    _id: req.params.id,
+    projectId: req.projectId
+  });
   res.json({ success: true });
 };
